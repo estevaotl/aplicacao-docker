@@ -3,7 +3,6 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var cors = require('cors');
 
 var app = express();
 
@@ -21,7 +20,6 @@ var dbUrl = 'mongodb+srv://testeEzops:testeEzops123@cluster0.syf8gyu.mongodb.net
 app.get('/messages', async (req, res) => {
     // cabeçalho para evitar problema de cors
     res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
-    app.use(cors());
 
     const allUsers = await Message.find();
 
@@ -31,7 +29,6 @@ app.get('/messages', async (req, res) => {
 app.post('/messages', async (req, res) => {
     // cabeçalho para evitar problema de cors
     res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
-    app.use(cors());
 
     var message = new Message({
         "name" : req.body.name,
