@@ -9,4 +9,4 @@
 
 
 # Para rodar o server.js => npm start devStart
-# Para rodar o front end, basta rodar via VSCODE com o Live Server
+# Para rodar o front end, basta rodar o index.html via VSCODE com o Live Server
