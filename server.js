@@ -59,10 +59,6 @@ db.once("open", () => {
     console.log("connected to the database")
 });
 
-var server = app.listen(3000, "0.0.0.0", () => {
+var server = app.listen(3000, () => {
     console.log('server is running on port', server.address().port);
 });
-
-// var server = app.listen(3000, () => {
-//     console.log('server is running on port', server.address().port);
-// });
