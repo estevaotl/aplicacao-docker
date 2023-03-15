@@ -61,4 +61,4 @@ db.once("open", () => {
     console.log("connected to the database")
 });
 
-app.listen(PORT);
+app.listen(PORT, '0.0.0.0');
