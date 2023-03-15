@@ -1,0 +1,10 @@
+Precisamos configurar o nginx para rodar a aplicação.
+
+O docker é como se fosse uma clonagem de maquina ( formatação ). Fazemos uma imagem para que qualquer pessoa possa acessar, e fazer a clonagem, ou seja, eu faço o build e qualquer pessoa pode ter a mesma maquina que eu rodando em um container.
+
+O dockerfile é como se fosse as instruções do que o docker deve fazer no servidor online
+docker-compose é utilizado para configurar os serviços do aplicativo. Em seguida, você cria e inicia todos os serviços com base na sua configuração executando um só comando. Por exemplo, utilizo a url do mongo que está no arquivo env; assim passo esse dado via docker-compose em um serviço.
+
+o arquivo env é como se fosse um arquivo para salvar dados sensiveis. Ao carregar, injetamos esses dados no arquivo js.
+
+Em ambiente local, rodamos o nodemon no servidor. Em produção, rodamos direto o node arquivo.js
