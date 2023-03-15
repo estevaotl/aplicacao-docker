@@ -18,6 +18,7 @@ var Message = mongoose.model('Message',{
 var dbUrl = 'mongodb+srv://testeEzops:testeEzops123@cluster0.syf8gyu.mongodb.net/?retryWrites=true&w=majority'
 
 const PORT = 3000;
+const HOST = '0.0.0.0';
 
 app.get('/messages', async (req, res) => {
     // cabeçalho para evitar problema de cors
@@ -61,4 +62,4 @@ db.once("open", () => {
     console.log("connected to the database")
 });
 
-app.listen(PORT, '0.0.0.0');
+app.listen(PORT, HOST);
