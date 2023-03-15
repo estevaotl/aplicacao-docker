@@ -13,5 +13,6 @@ ALGUNS COMANDOS UTEIS DO docker
 
 ## docker build -t nome_imagem . ( esse ponto é para indicar aonde está o dockerfile )
 ## docker push 
-## docker image ( mostra todas as imagens criadas e ativas )
+## docker images ( mostra todas as imagens criadas e ativas )
 ## docker system prune ( Remove tudo inutilizado: containers, networks, imagens ( sem tags ), volumes. )
+## docker image rm id_imagem ( caso de falha, utilizar o -f no final do codigo )
