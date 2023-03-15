@@ -3,6 +3,9 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var dotenv = require('dotenv');
+
+dotenv.config();
 
 var app = express();
 
@@ -15,11 +18,10 @@ var Message = mongoose.model('Message',{
     message : String
 });
 
-var dbUrl = 'mongodb+srv://testeEzops:testeEzops123@cluster0.syf8gyu.mongodb.net/?retryWrites=true&w=majority'
-
 app.get('/messages', async (req, res) => {
     // cabeçalho para evitar problema de cors
-    res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
     const allUsers = await Message.find();
 
@@ -28,7 +30,8 @@ app.get('/messages', async (req, res) => {
 
 app.post('/messages', async (req, res) => {
     // cabeçalho para evitar problema de cors
-    res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
     var message = new Message({
         "name" : req.body.name,
@@ -44,7 +47,7 @@ io.on('connection', () =>{
     console.log('a user is connected');
 }) 
 
-mongoose.connect(dbUrl , {
+mongoose.connect(process.env.MONGODB_URL , {
     // opções para nao dar problemas com versões antigas do node
     useNewUrlParser : true,
     useUnifiedTopology : true
