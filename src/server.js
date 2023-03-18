@@ -15,7 +15,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 var Message = mongoose.model('Message',{
     name : String,
-    message : String
+    message : String,
+    currentData : String
 });
 
 app.get('/messages', async (req, res) => {
@@ -35,8 +36,8 @@ app.post('/messages', async (req, res) => {
 
     var message = new Message({
         "name" : req.body.name,
-        "message" : req.body.message
-
+        "message" : req.body.message,
+        "currentData" : req.body.currentData
     });
 
     await message.save();

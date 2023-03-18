@@ -16,3 +16,5 @@ ALGUNS COMANDOS UTEIS DO docker
 ## docker images ( mostra todas as imagens criadas e ativas )
 ## docker system prune ( Remove tudo inutilizado: containers, networks, imagens ( sem tags ), volumes. )
 ## docker image rm id_imagem ( caso de falha, utilizar o -f no final do codigo )
+## docker log <container id>
+## docker-compose serve para setar as dependencias do container
