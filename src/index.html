@@ -47,13 +47,13 @@
         }
 
         function getMessages(){
-            $.get('http://localhost:3000/messages', (data) => {
+            $.get('http://3.237.80.61/messages', (data) => {
                 data.forEach(addMessages);
             })
         }
 
         function sendMessage(message){
-            $.post('http://localhost:3000/messages', message);
+            $.post('http://3.237.80.61/messages', message);
             location.reload();
         }
 
