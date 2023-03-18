@@ -6,7 +6,8 @@ on:
     
 jobs:
   CI:
-    runs-ons: ubuntu:latest
+    runs-on: ubuntu:latest
+
     steps: 
       - uses: actions/checkout@v3.4.0
       
@@ -15,7 +16,6 @@ jobs:
         with:
           username: ${{secrets.DOCKERHUB_USER}}
           password: ${{secrets.DOCKERHUB_PWD}}
-      
       
       - name: Contrução da imagem Docker
         uses: docker/build-push-action@v4.0
