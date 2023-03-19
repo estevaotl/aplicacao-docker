@@ -1,20 +1,118 @@
-Precisamos configurar o nginx para rodar a aplicação.
-
 O docker é como se fosse uma clonagem de maquina ( formatação ). Fazemos uma imagem para que qualquer pessoa possa acessar, e fazer a clonagem, ou seja, eu faço o build e qualquer pessoa pode ter a mesma maquina que eu rodando em um container.
 
 O dockerfile é como se fosse as instruções do que o docker deve fazer no servidor online
 docker-compose é utilizado para configurar os serviços do aplicativo. Em seguida, você cria e inicia todos os serviços com base na sua configuração executando um só comando. Por exemplo, utilizo a url do mongo que está no arquivo env; assim passo esse dado via docker-compose em um serviço.
 
-o arquivo env é como se fosse um arquivo para salvar dados sensiveis. Ao carregar, injetamos esses dados no arquivo js.
+o arquivo env é como se fosse um arquivo para salvar dados sensiveis. Ao carregar, injetamos esses dados no arquivo js. ( É PRECISO CRIAR ELE DIRETO NO SERVIDOR )
 
 Em ambiente local, rodamos o nodemon no servidor. Em produção, rodamos direto o node arquivo.js
 
-ALGUNS COMANDOS UTEIS DO docker
+============================================================================================================================================
+# ALGUNS COMANDOS UTEIS DO DOCKER
 
 ## docker build -t nome_imagem . ( esse ponto é para indicar aonde está o dockerfile )
-## docker push 
+## docker push
 ## docker images ( mostra todas as imagens criadas e ativas )
 ## docker system prune ( Remove tudo inutilizado: containers, networks, imagens ( sem tags ), volumes. )
 ## docker image rm id_imagem ( caso de falha, utilizar o -f no final do codigo )
-## docker log <container id>
-## docker-compose serve para setar as dependencias do container
+## docker logs -f <container id> -> verificar possiveis erros no container
+## docker-compose -> serve para setar as dependencias do container
+## docker ps -> mostra os containers ativos
+## docker ps -l -> mostra todos os container, ativos e ddesativados por algum motivo
+
+============================================================================================================================================
+# COMANDOS BASICOS UTILIZADOS EM UM ARQUIVO DOCKERFILE
+
+## FROM: especifica a imagem base a partir da qual a nova imagem será criada.
+## MAINTAINER: define o nome e o email do mantenedor da imagem.
+## RUN: executa comandos dentro do contêiner e cria uma nova camada.
+## CMD: define o comando padrão que será executado quando o contêiner for iniciado. Este comando pode ser substituído por um comando especificado na linha de comando.
+## LABEL: adiciona metadados à imagem.
+## EXPOSE: informa a porta em que o contêiner estará escutando durante a execução.
+## ENV: define variáveis de ambiente.
+## ADD ou COPY: copia arquivos e diretórios do host para o contêiner.
+## ENTRYPOINT: define o comando que será executado quando o contêiner for iniciado. Este comando não pode ser substituído por um comando especificado na linha de comando.
+## VOLUME: cria um ponto de montagem para armazenamento de dados do contêiner.
+## USER: define o usuário que executará o comando especificado em RUN, CMD ou ENTRYPOINT.
+## WORKDIR: define o diretório de trabalho do contêiner.
+## ARG: define variáveis que podem ser passadas para o Docker durante a construção da imagem.
+
+Esses são os comandos básicos que podem ser usados em um arquivo Dockerfile.
+
+=============================================================================================================================================
+# NGINX
+
+Precisamos configurar o nginx para rodar a aplicação
+
+## CONFIGURAÇÃO PARA CRIAR UM ALIAS DO ARQUIVO DO SITES-AVAILABLE PARA O SITES-ENABLED PARA EVITAR CRIAR O MESMO ARQUIVO 2X 
+ln -s /etc/nginx/sites-available/<arquivo de configuração> /etc/nginx/sites-enabled/<arquivo de configuração> 
+
+O Nginx é um servidor web que é frequentemente usado como um proxy reverso para outras aplicações web, incluindo aquelas executadas em contêineres Docker. No caso específico de executar uma aplicação Node.js em um contêiner Docker com HTTPS, a configuração do Nginx é necessária para permitir o acesso seguro à sua aplicação.
+
+Quando você executa a sua aplicação Node.js em um contêiner Docker, ela é executada em uma rede interna do Docker e é acessível apenas através da porta exposta pelo contêiner. No entanto, isso não é suficiente para permitir que os usuários acessem a sua aplicação de forma segura por HTTPS. É necessário ter um servidor web externo que redirecione as solicitações HTTPS para a porta correta da sua aplicação Node.js.
+
+É aí que entra o Nginx: ele é configurado para escutar as solicitações HTTPS e redirecioná-las para a porta correta da sua aplicação Node.js executada em um contêiner Docker. Além disso, o Nginx também pode ser configurado para usar certificados SSL/TLS, fornecendo uma camada adicional de segurança para as suas comunicações.
+
+Desta forma, a configuração do Nginx é essencial para permitir o acesso seguro à sua aplicação Node.js em um ambiente de contêineres Docker. Ele é responsável por redirecionar as solicitações HTTPS para a porta correta da sua aplicação Node.js e fornecer a camada de segurança adicional que você precisa para proteger as suas comunicações.
+
+Em relação ao NGINX para rodar uma aplicacao com HTTPS é necessario configurar utilizando um arquivo chamado "nginx.conf".
+
+Este nginx.conf vai definir a configuração básica do Nginx, configurando o upstream para a aplicação Node, definindo as configurações do servidor HTTP, redirecionando para HTTPS, configurando as configurações do servidor HTTPS e definindo a rota para a sua aplicação Node.
+
+Um exemplo da configuracao desse arquivo pode ser mais ou menos isso:
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+worker_processes 1;
+
+events { worker_connections 1024; }
+
+http {
+  sendfile on;
+
+  upstream app {
+    server node-app:3000;
+  }
+
+  server {
+    listen 80;
+
+    location / {
+      return 301 https://$host$request_uri;
+    }
+  }
+
+  server {
+    listen 443 ssl;
+
+    server_name localhost;
+
+    ssl_certificate /etc/nginx/ssl/server.crt;
+    ssl_certificate_key /etc/nginx/ssl/server.key;
+
+    location / {
+      proxy_pass http://app;
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto https;
+      proxy_redirect off;
+    }
+  }
+}
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Lembrando que e necessario tambem gerar o certificado SSL autoassinado que o Nginx vai usar, e necessario gerar os arquivos (server.key e server.crt) e salvar o arquivo server.key e server.crt na pasta ssl.
+
+# APLICAÇÕES QUE PODEMOS UTILIZAR O NGINX
+
+Load balancing: o Nginx pode ser usado como um balanceador de carga para distribuir o tráfego entre múltiplos servidores web, melhorando a escalabilidade e a disponibilidade da sua aplicação.
+
+Servidor de arquivos estáticos: o Nginx também pode ser usado como um servidor de arquivos estáticos, permitindo que você sirva arquivos estáticos, como imagens, arquivos CSS e JavaScript diretamente do servidor, melhorando a performance da sua aplicação.
+
+Proxy para outras aplicações: além de ser um proxy reverso, o Nginx também pode ser usado como um proxy para outras aplicações, como um servidor de email ou um servidor de banco de dados.
+
+Cache: o Nginx tem um poderoso sistema de cache que pode ser usado para armazenar em cache o conteúdo da sua aplicação, melhorando a performance e reduzindo a carga nos servidores de backend.
+
+Suporte a SSL/TLS: o Nginx suporta SSL/TLS e pode ser configurado para fornecer comunicações seguras entre o cliente e o servidor.
