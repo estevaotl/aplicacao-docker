@@ -61,7 +61,7 @@ Este nginx.conf vai definir a configuração básica do Nginx, configurando o up
 
 Um exemplo da configuracao desse arquivo pode ser mais ou menos isso:
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++ 
 
 worker_processes 1;
 
