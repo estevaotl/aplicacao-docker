@@ -11,7 +11,7 @@ jobs:
     steps: 
       - uses: actions/checkout@v3.4.0
 
-      - name: executing remote ssh commands using password
+      - name: Execução de comandos SSH usando senha
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.HOST_SERVER }}
@@ -20,8 +20,9 @@ jobs:
           port: ${{ secrets.PORT_SERVER }}
           key: ${{ secrets.PRIVATE_KEY_SERVER }}
           script: |
-                  sudo docker stop 8c4
-                  sudo docker image rm 5d2 904 -f
+                  sudo docker stop fa6
+                  sudo docker image rm 2a8 -f
+                  sudo docker image rm 5d2 -f
                   sudo docker pull estevaotl/testezops:latest
                   sudo docker run -p 3000:3000 -d estevaotl/testezops
           
