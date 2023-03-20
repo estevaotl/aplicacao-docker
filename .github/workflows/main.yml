@@ -18,6 +18,7 @@ jobs:
           username: ${{ USERNAME_SERVER }}
           password: ${{ PASSWORD_SERVER }}
           port: ${{ PORT_SERVER }}
+          key: ${{ PRIVATE_KEY_SERVER }}
           script: sudo docker stop c6b 
                   sudo docker image rm f15 -f
                   sudo docker pull estevaotl/testezops:latest
