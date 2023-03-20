@@ -20,9 +20,8 @@ jobs:
           port: ${{ secrets.PORT_SERVER }}
           key: ${{ secrets.PRIVATE_KEY_SERVER }}
           script: |
-                  sudo docker stop 949
-                  sudo docker image rm 9d8 -f
-                  sudo docker image rm 2a8 -f
+                  sudo docker stop 7ea
+                  sudo docker image rm 6f4 -f
                   sudo docker pull estevaotl/testezops:latest
                   sudo docker run -p 3000:3000 -d estevaotl/testezops
           
