@@ -19,8 +19,9 @@ jobs:
           password: ${{ secrets.PASSWORD_SERVER }}
           port: ${{ secrets.PORT_SERVER }}
           key: ${{ secrets.PRIVATE_KEY_SERVER }}
-          script: sudo docker stop c6b 
-                  sudo docker image rm f15
+          script: |
+                  sudo docker stop c6b 
+                  sudo docker image rm f15 -f
                   sudo docker pull estevaotl/testezops:latest
                   sudo docker run -p 3000:3000 -d estevaotl/testezops
           
