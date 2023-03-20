@@ -14,11 +14,13 @@ jobs:
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: ${{ HOST_SERVER }}
-          username: ${{ USERNAME_SERVER }}
-          password: ${{ PASSWORD_SERVER }}
-          port: ${{ PORT_SERVER }}
-          script: sudo docker stop c6b 
+          host: ${{ secrets.HOST_SERVER }}
+          username: ${{ secrets.USERNAME_SERVER }}
+          password: ${{ secrets.PASSWORD_SERVER }}
+          port: ${{ secrets.PORT_SERVER }}
+          key: ${{ secrets.PRIVATE_KEY_SERVER }}
+          script: |
+                  sudo docker stop 263
                   sudo docker image rm f15 -f
                   sudo docker pull estevaotl/testezops:latest
                   sudo docker run -p 3000:3000 -d estevaotl/testezops
