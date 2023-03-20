@@ -1,4 +1,4 @@
-name: CI/CD
+name: Pipeline
 
 on: 
   push:
@@ -10,7 +10,19 @@ jobs:
 
     steps: 
       - uses: actions/checkout@v3.4.0
-      
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ HOST_SERVER }}
+          username: ${{ USERNAME_SERVER }}
+          password: ${{ PASSWORD_SERVER }}
+          port: ${{ PORT_SERVER }}
+          script: sudo docker stop c6b 
+                  sudo docker image rm f15 -f
+                  sudo docker pull estevaotl/testezops:latest
+                  sudo docker run -p 3000:3000 -d estevaotl/testezops
+          
       - name: Autenticação no Docker Hub
         uses: docker/login-action@v2.1.0
         with:
@@ -24,3 +36,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: estevaotl/testezops:latest
+          
+
