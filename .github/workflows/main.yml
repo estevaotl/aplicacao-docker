@@ -17,13 +17,13 @@ jobs:
           username: ${{secrets.DOCKERHUB_USER}}
           password: ${{secrets.DOCKERHUB_PWD}}
 
-      - name: Contrução e push da imagem Docker
-        uses: docker/build-push-action@v4.0.0
-        with: 
-          context: ./
-          file: ./Dockerfile
-          push: true
-          tags: estevaotl/testezops:latest
+      # - name: Contrução e push da imagem Docker
+      #   uses: docker/build-push-action@v4.0.0
+      #   with: 
+      #     context: ./
+      #     file: ./Dockerfile
+      #     push: true
+      #     tags: estevaotl/testezops:latest
 
       - name: Execução de comandos SSH usando senha
         uses: appleboy/ssh-action@v0.1.8
