@@ -116,3 +116,57 @@ Proxy para outras aplicações: além de ser um proxy reverso, o Nginx também p
 Cache: o Nginx tem um poderoso sistema de cache que pode ser usado para armazenar em cache o conteúdo da sua aplicação, melhorando a performance e reduzindo a carga nos servidores de backend.
 
 Suporte a SSL/TLS: o Nginx suporta SSL/TLS e pode ser configurado para fornecer comunicações seguras entre o cliente e o servidor.
+
+# CONFIGURAÇÕES DO ARQUIVO DO NGINX
+
+O arquivo de configuração do Nginx geralmente é chamado de "nginx.conf". Ele contém as principais configurações do servidor, incluindo os blocos de servidor e localização.
+
+O bloco de servidor define as configurações gerais do servidor, como o endereço IP e a porta que o servidor escuta, o protocolo utilizado (HTTP, HTTPS, etc.), o certificado SSL e outras configurações.
+
+O bloco de localização define as configurações para uma determinada localização no servidor. Essa localização pode ser uma URL específica, um diretório no sistema de arquivos ou uma extensão de arquivo específica.
+
+Dentro de cada bloco, você pode definir diretivas específicas, como as opções de proxy_pass para redirecionar o tráfego para outro servidor ou o uso de cache para armazenar dados de acesso frequente em memória ou em disco.
+
+É possível incluir outros arquivos de configuração no arquivo nginx.conf usando a diretiva include.
+
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    server_name 3.237.80.61;
+
+    location / {
+        proxy_http_version 1.1;
+        proxy_cache_bypass $http_upgrade;
+
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_pass http://localhost:3000;
+    }
+}
+
+A linha "listen 80 default_server;" define que o servidor está escutando as conexões HTTP na porta 80 e que esse é o servidor padrão para lidar com conexões que não correspondem a nenhum outro servidor configurado. A linha "listen [::]:80 default_server;" define o mesmo para conexões IPv6.
+
+A linha "server_name 3.237.80.61;" define o nome do servidor que está sendo configurado. Neste caso, o servidor é identificado pelo endereço IP "3.237.80.61".
+
+A seção "location / {" define a configuração para a raiz do servidor. Isso significa que qualquer solicitação que não corresponda a nenhuma outra localização especificada será tratada por essa configuração.
+
+As linhas abaixo dessa seção são as diretivas que definem como as solicitações serão tratadas:
+
+A diretiva "proxy_http_version 1.1;" define a versão do protocolo HTTP que o servidor usará para se comunicar com o aplicativo da web que está sendo executado na porta 3000.
+
+A diretiva "proxy_cache_bypass $http_upgrade;" é usada para ignorar o cache do Nginx para solicitações que contêm a header "upgrade".
+
+As diretivas "proxy_set_header Upgrade $http_upgrade;", "proxy_set_header Connection "upgrade";" e "proxy_set_header Host $host;" são usadas para configurar os cabeçalhos HTTP necessários para redirecionar o tráfego da web para o aplicativo que está sendo executado na porta 3000.
+
+As diretivas "proxy_set_header X-Real-IP $remote_addr;" e "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;" adicionam informações de endereço IP do cliente e informações de encaminhamento HTTP à solicitação enviada para o aplicativo na porta 3000.
+
+A diretiva "proxy_set_header X-Forwarded-Proto $scheme;" adiciona informações sobre o protocolo usado (HTTP ou HTTPS) à solicitação enviada para o aplicativo na porta 3000.
+
+A diretiva "proxy_pass http://localhost:3000;" define o endereço do aplicativo da web que está sendo executado na porta.
