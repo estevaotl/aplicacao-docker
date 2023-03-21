@@ -35,7 +35,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY_SERVER }}
           script: |
                   cd /home/ubuntu/ezops
-                  sudo docker stop 6c1
-                  sudo docker image rm 0la -f
+                  sudo docker stop edb
+                  sudo docker image rm 749 -f
                   sudo docker pull estevaotl/testezops:latest
                   sudo docker run -p 3000:3000 -d estevaotl/testezops:latest
